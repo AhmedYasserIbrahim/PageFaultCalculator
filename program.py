@@ -36,8 +36,35 @@ def LRU(pages, size):
             faults=faults+1
 
     return faults
-                        
+
+def OPT(pages, size):
+    faults = 0
+    cache = []
+    
+    for i in range(len(pages)):  # Iterate through the pages
+        if pages[i] not in cache:  # If the current page is not in the cache
+            if len(cache) < size:  # If the cache has available space
+                cache.append(pages[i])  # Add the current page to the cache
+            else:  # If the cache is full
+                # Find the page in the cache that is farthest in the future
+                farthest = 0
+                index_to_remove = -1
+                for j in range(len(cache)):
+                    try:
+                        index = pages[i + 1:].index(cache[j])
+                    except ValueError:
+                        index = float('inf')
+                    if index > farthest:
+                        farthest = index
+                        index_to_remove = j
                 
+                # Remove that page from the cache
+                cache.pop(index_to_remove)
+                cache.append(pages[i])  # Add the new page to the cache
+            faults += 1  # Increment the number of page faults
+    
+    return faults
+
 
 
 
@@ -55,7 +82,7 @@ print("Please enter the pages(items): ")
 for i in range(pageNo): #Fill the pages list with the page numbers
     pages.append(int(input())) #Make sure to convert from String to int before populating the list
 
-print("The number of page faults for FIFO algorithm is: " + str(LRU(pages, cacheSize)))
+print("The number of page faults for FIFO algorithm is: " + str(OPT(pages, cacheSize)))
 #Adding the hit and miss ratio would be a good feature
 
 
