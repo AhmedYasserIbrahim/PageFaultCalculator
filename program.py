@@ -92,6 +92,21 @@ def OPT(pages, size):
             faults += 1  # Increment faults if page is not in cache
     return faults
 
+def calculate_ratios(page_faults, total_requests):
+    """
+    Calculate hit and miss ratios based on the number of page faults and total page requests.
+    
+    Parameters:
+    page_faults (int): Number of page faults.
+    total_requests (int): Total number of page requests.
+    
+    Returns:
+    tuple: Miss ratio and hit ratio.
+    """
+    miss_ratio = page_faults / total_requests
+    hit_ratio = 1 - miss_ratio
+    return miss_ratio, hit_ratio
+
 # Main code
 print("Please enter the number of pages:")
 pageNo = int(input())
@@ -102,6 +117,22 @@ print("Please enter the pages(items):")
 for i in range(pageNo):
     pages.append(int(input()))  # Populate the pages list with integers
 
-print("The number of page faults for FIFO algorithm is: " + str(FIFO(pages, cacheSize)))
-print("The number of page faults for LRU algorithm is: " + str(LRU(pages, cacheSize)))
-print("The number of page faults for OPT algorithm is: " + str(OPT(pages, cacheSize)))
+total_requests = len(pages)
+
+fifo_faults = FIFO(pages, cacheSize)
+fifo_miss_ratio, fifo_hit_ratio = calculate_ratios(fifo_faults, total_requests)
+print("The number of page faults for FIFO algorithm is: " + str(fifo_faults))
+print("The miss ratio for FIFO algorithm is: " + str(fifo_miss_ratio))
+print("The hit ratio for FIFO algorithm is: " + str(fifo_hit_ratio))
+
+lru_faults = LRU(pages, cacheSize)
+lru_miss_ratio, lru_hit_ratio = calculate_ratios(lru_faults, total_requests)
+print("The number of page faults for LRU algorithm is: " + str(lru_faults))
+print("The miss ratio for LRU algorithm is: " + str(lru_miss_ratio))
+print("The hit ratio for LRU algorithm is: " + str(lru_hit_ratio))
+
+opt_faults = OPT(pages, cacheSize)
+opt_miss_ratio, opt_hit_ratio = calculate_ratios(opt_faults, total_requests)
+print("The number of page faults for OPT algorithm is: " + str(opt_faults))
+print("The miss ratio for OPT algorithm is: " + str(opt_miss_ratio))
+print("The hit ratio for OPT algorithm is: " + str(opt_hit_ratio))
